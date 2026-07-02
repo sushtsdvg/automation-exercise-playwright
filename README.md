@@ -1,1 +1,1 @@
-# automation-exercise-playwright
+# automation-exercise-cypress
