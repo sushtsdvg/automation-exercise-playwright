@@ -1,13 +1,15 @@
 const { test, expect } = require('@playwright/test');
 const registerUserData = require('../../fixtures/registerUser.json');
 test.describe('Register User', () => {
-    test('should register a new user successfully', async ({ page }) => {
-        const email = `user${Date.now()}@example.com`;
+    test.beforeEach(async ({ page })=>{
         await page.goto('/');
         await expect(page).toHaveURL('/');
         await page.getByRole('link', { name: ' Signup / Login' }).click();
         await expect(page).toHaveURL('/login');
         await expect(page.getByRole('heading', { name: 'New User Signup!' })).toBeVisible();
+    })
+    test('should register a new user successfully', async ({ page }) => {
+        const email = `user${Date.now()}@example.com`;
         await page.getByPlaceholder('Name').fill('John Doe');
         await page.locator('[data-qa="signup-email"]').fill(email);
         await page.getByRole('button', { name: 'Signup' }).click();
@@ -39,4 +41,22 @@ test.describe('Register User', () => {
         await page.getByRole('link', { name: 'Delete Account' }).click();
         await expect(page.getByText('ACCOUNT DELETED!')).toBeVisible();
     })
+    test("should not register user with existing email", async ({ page }) => {
+      await expect(
+        page.getByRole("heading", { name: "New User Signup!" }),
+      ).toBeVisible();
+      await page
+        .getByRole("textbox", { name: "Name" })
+        .fill(registerUserData.Name);
+      await page
+        .locator("form")
+        .filter({ hasText: "Signup" })
+        .getByPlaceholder("Email Address")
+        .fill(registerUserData.Email);
+      await expect(page.getByRole("button", { name: "Signup" })).toBeVisible();
+      await page.getByRole("button", { name: "Signup" }).click();
+      await expect(
+        page.getByText("Email Address already exist!"),
+      ).toBeVisible();
+    });
 })

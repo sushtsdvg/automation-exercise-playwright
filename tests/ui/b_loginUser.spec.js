@@ -23,7 +23,7 @@ test.describe("Login User", () => {
     await expect(page.getByText("Logged in as Sushmitha S")).toBeVisible();
     // Logout User
     await page.getByRole("link", { name: " Logout" }).click();
-    await expect(page.getByRole("heading", { name: "Login to your account" })).toBeVisible();
+    await expect(page).toHaveURL("/login");
   });
   test("Login User with incorrect email and password", async ({ page }) => {
     await page
@@ -37,4 +37,5 @@ test.describe("Login User", () => {
     await page.getByRole("button", { name: "Login" }).click();
     await expect(page.getByText("Your email or password is incorrect!")).toBeVisible();
   });
+  
 });
