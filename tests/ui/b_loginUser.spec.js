@@ -15,12 +15,12 @@ test.describe("Login User", () => {
       .locator("form")
       .filter({ hasText: "Login" })
       .getByPlaceholder("Email Address")
-      .fill(registerUserData.Email);
+      .fill(process.env.APP_EMAIL);
     await page
       .getByRole("textbox", { name: "Password" })
-      .fill(registerUserData.LoginPassword);
+      .fill(process.env.APP_PASSWORD);
     await page.getByRole("button", { name: "Login" }).click();
-    await expect(page.getByText("Logged in as Sushmitha S")).toBeVisible();
+    await expect(page.getByText("Logged in as " + process.env.APP_USERNAME)).toBeVisible();
     // Logout User
     await page.getByRole("link", { name: " Logout" }).click();
     await expect(page).toHaveURL("/login");

@@ -52,7 +52,7 @@ test.describe('Register User', () => {
         .locator("form")
         .filter({ hasText: "Signup" })
         .getByPlaceholder("Email Address")
-        .fill(registerUserData.Email);
+        .fill(process.env.APP_EMAIL);
       await expect(page.getByRole("button", { name: "Signup" })).toBeVisible();
       await page.getByRole("button", { name: "Signup" }).click();
       await expect(
