@@ -15,7 +15,7 @@ test.describe('Search Product API', ()=>{
       console.log(productNames);
     });
 
-    test.only("POST To Search Product without search_product parameter", async function ({ request }) {
+    test("POST To Search Product without search_product parameter", async function ({ request }) {
       const response = await request.post("/api/searchProduct", {
         form: {
             // No search_product parameter provided
