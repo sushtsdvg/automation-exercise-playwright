@@ -1,6 +1,6 @@
 import { test, expect} from '@playwright/test';
 import generateRandomEmail from '../../utils/generateRandomEmail.js';
-test.describe.only('Create Account API', ()=>{
+test.describe('Create Account API', ()=>{
     let email;
      test.beforeAll(async () => {
         email = generateRandomEmail();
