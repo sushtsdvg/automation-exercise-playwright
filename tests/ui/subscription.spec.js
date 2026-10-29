@@ -1,5 +1,6 @@
 const { test, expect } = require('@playwright/test');
 const { SubscriptionPage } = require('../../pages/susbscriptionPage');
+const subscriptionData = require('../../fixtures/subscription.json');
 test.describe("Subscription", () => {
     let subscriptionPage;
     test.beforeEach(async ({ page }) => {
@@ -9,9 +10,9 @@ test.describe("Subscription", () => {
         await page.goto("/");
         await expect(page).toHaveURL("/");
         await expect(subscriptionPage.footer).toBeVisible();
-        await subscriptionPage.subscriptionEmailInput.fill("test@example.com");
+        await subscriptionPage.subscriptionEmailInput.fill(subscriptionData.email);
         await subscriptionPage.subscriptionButton.click();
         await expect(subscriptionPage.successMessage).toBeVisible();
-        await expect(subscriptionPage.successMessage).toHaveText("You have been successfully subscribed!");
+        await expect(subscriptionPage.successMessage).toHaveText(subscriptionData.successMessage);
     })
 })
