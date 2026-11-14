@@ -10,9 +10,9 @@ test.describe("Cart", () => {
     await expect(page).toHaveURL("/");
   });
   test("Verify Subscription in Cart page", async ({ page }) => {
-    await page.getByRole("link", { name: " Cart" }).click();
+    await cartPage.cartLink.click();
     await expect(page).toHaveURL("/view_cart");
-    await expect(page.getByText("Shopping Cart")).toBeVisible();
+    await expect(cartPage.heading).toBeVisible();
     // await expect(CartPage.footer).toBeVisible();
     await cartPage.subscriptionEmailInput.fill(subscriptionData.email);
     await cartPage.subscriptionButton.click();
@@ -22,26 +22,26 @@ test.describe("Cart", () => {
     );
   });
   test("Add Products in Cart", async ({ page }) => {
-    await page.getByRole("link", { name: " Products" }).click();
+    await cartPage.productLink.click();
     await expect(page).toHaveURL("/products");
-    await expect(page.getByText("All Products")).toBeVisible();
+    await expect(cartPage.productHeading).toBeVisible();
     const productName1 = await page.locator(".single-products").first().locator('//img/following-sibling::p').textContent();
     const price1 = await page.locator(".single-products").first().locator('//img/following-sibling::h2').textContent();
     console.log(productName1); // Blue Top
     console.log(price1); // $25
-    await page.locator(".single-products").first().hover();
-    await page.getByText("Add to cart").first().click();
-    await page.getByRole("button", { name: "Continue Shopping" }).click();
+    await cartPage.firstProduct.hover();
+    await cartPage.addToCartButton.click();
+    await cartPage.continueShoppingButton.click();
     await expect(page).toHaveURL("/products");
     const productName2 = await page.locator(".single-products").nth(1).getByRole('paragraph').filter({ hasText: /^Men Tshirt$/ }).textContent();
     const price2 = await page.locator(".single-products").nth(1).locator('//img/following-sibling::h2').textContent();
     console.log(productName2); // Green Top
     console.log(price2); // $30
-    await page.locator(".single-products").nth(1).hover();   
+    await cartPage.secondProduct.hover();
     await page.locator(
     '//p[text()="Men Tshirt"]/following-sibling::a[contains(text(),"Add to cart")]'
 ).click();
-    await page.getByRole("link", { name: " View Cart" }).click();
+    await cartPage.viewCartLink.click();
     await expect(page).toHaveURL("/view_cart");  
     await expect(page.getByText(productName1)).toBeVisible(); 
     await expect(page.getByText(productName2)).toBeVisible();
@@ -64,17 +64,16 @@ test.describe("Cart", () => {
     expect(totalPrice1.trim()).toEqual(price1);
     expect(totalPrice2.trim()).toEqual(price2);
 })
-test.only("Verify Product quantity in Cart", async ({ page }) => {
+test("Verify Product quantity in Cart", async ({ page }) => {
   await page.goto("/");
   await expect(page).toHaveURL("/");
   await page.getByRole("link", { name: "View Product" }).first().click();
   await expect(page).toHaveURL(/\/product_details\/\d+/);
-  const quantityInput = page.getByRole('spinbutton').first();
-  await quantityInput.fill('');
+  await cartPage.quantityInput.fill('');
   const quantity = 4;
-  await quantityInput.fill(quantity.toString());
-  await page.getByRole("button", { name: "Add to cart" }).click();
-  await page.getByRole("link", { name: "View Cart" }).click();
+  await cartPage.quantityInput.fill(quantity.toString());
+  await cartPage.addToCartButton.click();
+  await cartPage.viewCartLink.click();
   await expect(page).toHaveURL("/view_cart");
   const updatedQuantity = await page.locator('table tbody tr').first().locator('td').nth(3).textContent();
   expect(updatedQuantity.trim()).toEqual(quantity.toString());
